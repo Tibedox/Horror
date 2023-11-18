@@ -5,6 +5,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.widget.ImageView;
 
 import java.util.Random;
@@ -14,7 +15,7 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
     ConstraintLayout bg;
     int screenWidth, screenHeight;
-    Ghost[] ghost = new Ghost[100];
+    Ghost[] ghost = new Ghost[10];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         bg = findViewById(R.id.bg);
         for (int i = 0; i < ghost.length; i++) {
-            ghost[i] = new Ghost();
+            ghost[i] = new Ghost(this);
         }
 
         Timer timer = new Timer();
@@ -42,40 +43,5 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         timer.scheduleAtFixedRate(timerTask, 0, 10);
-    }
-
-    class Ghost {
-        ImageView ghostView;
-        float x, y;
-        float vx, vy;
-        int width, height;
-
-        Ghost(){
-            Random rnd = new Random();
-            vx = rnd.nextFloat()*20-10;
-            vy = rnd.nextFloat()*20-10;
-            width = rnd.nextInt(100)+50;
-            height = width*2;
-
-            ghostView = new ImageView(getApplicationContext());
-            ghostView.setImageResource(R.drawable.ghost);
-            ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(width, height);
-            ghostView.setLayoutParams(params);
-            x = screenWidth/2f - width/2f;
-            y = screenHeight/2f - height/2f;
-            ghostView.setX(x);
-            ghostView.setY(y);
-            bg.addView(ghostView);
-        }
-
-        void move(){
-            x += vx;
-            if(x > screenWidth -ghostView.getWidth() | x<0) vx = -vx;
-            ghostView.setX(x);
-
-            y += vy;
-            if(y > screenHeight -ghostView.getHeight() | y<0) vy = -vy;
-            ghostView.setY(y);
-        }
     }
 }
